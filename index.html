@@ -1,0 +1,461 @@
+<div id="pbkdf2-tool-container">
+    <!-- Scoped Styles -->
+    <style>
+        /* Import Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Reset and Base Styles within the Container */
+        #pbkdf2-tool-container * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Container Styling */
+        #pbkdf2-tool-container {
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Tool Card Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card {
+            background-color: #ffffff;
+            padding: 25px 35px;
+            border-radius: 12px;
+            border: 1px solid #a0aec0; /* Added a darker border */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card:hover {
+            
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            border-color: #718096; /* Darken the border on hover */
+        }
+
+        /* Header Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        /* Form Group Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        /* Info Icon Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            width: 16px;
+            height: 16px;
+            background-color: #4A90E2;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Tooltip Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group .tooltip {
+            visibility: hidden;
+            width: 180px;
+            background-color: #4A90E2;
+            color: #ffffff;
+            text-align: left;
+            border-radius: 4px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            left: 105%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group .info-icon:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent #4A90E2 transparent transparent;
+        }
+
+        /* Input and Select Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group input,
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f7fafc;			
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group input:focus,
+        #pbkdf2-tool-container .pbkdf2-tool-card .form-group select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        /* Button Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .btn-derive {
+            width: 100%;
+            padding: 12px;
+            background-color: #3182ce;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .btn-derive:hover {
+            background-color: #2b6cb0;
+            transform: translateY(-1px);
+        }
+
+        /* Error Message Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .error-message {
+            color: #c53030;
+            background-color: #fef2f2;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Output Section Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .output-section {
+            margin-top: 25px;
+            padding: 18px;
+            background-color: #ebf8ff;
+            border-left: 5px solid #3182ce;
+            border-radius: 6px;
+            position: relative;
+            display: none;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .output-section strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .output-section textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+            background-color: #ffffff;
+            margin-top: 10px;
+        }
+
+        /* Copy Button Styling */
+        #pbkdf2-tool-container .pbkdf2-tool-card .copy-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background-color: #3182ce;
+            border: none;
+            color: #ffffff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s ease;
+        }
+
+        #pbkdf2-tool-container .pbkdf2-tool-card .copy-btn:hover {
+            background-color: #2b6cb0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #pbkdf2-tool-container .pbkdf2-tool-card {
+                padding: 20px 25px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card h2 {
+                font-size: 20px;
+                margin-bottom: 18px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card .btn-derive {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card .output-section textarea {
+                height: 100px;
+                font-size: 12px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card .form-group .info-icon {
+                width: 14px;
+                height: 14px;
+                font-size: 10px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card .form-group .tooltip {
+                width: 160px;
+            }
+
+            #pbkdf2-tool-container .pbkdf2-tool-card .copy-btn {
+                padding: 5px 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+
+    <!-- Tool Container -->
+    <div class="pbkdf2-tool-card">
+        <h2>PBKDF2 Key Derivation</h2>
+        <form id="pbkdf2-form">
+            <!-- Plain Text Input -->
+            <div class="form-group">
+                <label for="pbkdf2-plaintext">
+                    Plain Text:
+                    <div class="info-icon">i
+                        <div class="tooltip">Your input to derive the key from.</div>
+                    </div>
+                </label>
+                <input type="text" id="pbkdf2-plaintext" name="plaintext" placeholder="Enter your plain text" required>
+            </div>
+
+            <!-- Salt Input -->
+            <div class="form-group">
+                <label for="pbkdf2-salt">
+                    Salt:
+                    <div class="info-icon">i
+                        <div class="tooltip">A unique value to add randomness. Enhances security.</div>
+                    </div>
+                </label>
+                <input type="text" id="pbkdf2-salt" name="salt" placeholder="Leave empty to generate a random salt">
+            </div>
+
+            <!-- Iterations Input -->
+            <div class="form-group">
+                <label for="pbkdf2-iterations">
+                    Iterations:
+                    <div class="info-icon">i
+                        <div class="tooltip">Number of times the function is applied. Higher values increase security but require more computation.</div>
+                    </div>
+                </label>
+                <input type="number" id="pbkdf2-iterations" name="iterations" min="1" value="1000" required>
+            </div>
+
+            <!-- Key Length Input -->
+            <div class="form-group">
+                <label for="pbkdf2-key-length">
+                    Key Length (bytes):
+                    <div class="info-icon">i
+                        <div class="tooltip">Desired length of the derived key in bytes (e.g., 32 for 256-bit key).</div>
+                    </div>
+                </label>
+                <input type="number" id="pbkdf2-key-length" name="key-length" min="1" value="32" required>
+            </div>
+
+            <!-- Hash Function Selection -->
+            <div class="form-group">
+                <label for="pbkdf2-hash">
+                    Hash Function:
+                    <div class="info-icon">i
+                        <div class="tooltip">Select the hash function to use for key derivation.</div>
+                    </div>
+                </label>
+                <select id="pbkdf2-hash" name="hash">
+                    <option value="SHA-256">SHA-256</option>
+                    <option value="SHA-384">SHA-384</option>
+                    <option value="SHA-512">SHA-512</option>
+                </select>
+            </div>
+
+            <!-- Derive Key Button -->
+            <button type="submit" class="btn-derive">Derive Key</button>
+
+            <!-- Error Message -->
+            <div class="error-message" id="pbkdf2-error-message"></div>
+        </form>
+
+        <!-- Derived Key Output -->
+        <div class="output-section" id="pbkdf2-derived-key">
+            <strong>Derived Key (Hex):</strong>
+            <textarea id="pbkdf2-key-output" readonly></textarea>
+            <button class="copy-btn" id="pbkdf2-copy-btn">Copy</button>
+        </div>
+    </div>
+
+    <!-- Scoped Script -->
+    <script>
+        (function() {
+            // Get References to Elements
+            const form = document.getElementById('pbkdf2-form');
+            const derivedKeyDiv = document.getElementById('pbkdf2-derived-key');
+            const keyOutput = document.getElementById('pbkdf2-key-output');
+            const errorMessage = document.getElementById('pbkdf2-error-message');
+            const copyButton = document.getElementById('pbkdf2-copy-btn');
+            const saltInput = document.getElementById('pbkdf2-salt');
+
+            // Form Submit Event Listener
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                // Reset Outputs and Errors
+                derivedKeyDiv.style.display = 'none';
+                keyOutput.value = '';
+                errorMessage.style.display = 'none';
+                errorMessage.textContent = '';
+
+                // Retrieve Form Values
+                const plaintext = document.getElementById('pbkdf2-plaintext').value.trim();
+                let salt = saltInput.value.trim();
+                const iterations = parseInt(document.getElementById('pbkdf2-iterations').value, 10);
+                const keyLengthBytes = parseInt(document.getElementById('pbkdf2-key-length').value, 10);
+                const hash = document.getElementById('pbkdf2-hash').value;
+
+                // Input Validation
+                if (!plaintext) {
+                    displayError('Plain Text is required.');
+                    return;
+                }
+                if (isNaN(iterations) || iterations < 1) {
+                    displayError('Iterations must be a positive integer.');
+                    return;
+                }
+                if (isNaN(keyLengthBytes) || keyLengthBytes < 1) {
+                    displayError('Key length must be a positive integer.');
+                    return;
+                }
+                if (!['SHA-256', 'SHA-384', 'SHA-512'].includes(hash)) {
+                    displayError('Invalid hash function selected.');
+                    return;
+                }
+
+                // Generate Random Salt if Not Provided
+                if (!salt) {
+                    const saltArray = new Uint8Array(16);
+                    window.crypto.getRandomValues(saltArray);
+                    salt = Array.from(saltArray)
+                        .map(b => b.toString(16).padStart(2, '0'))
+                        .join('');
+                    saltInput.value = salt; // Display generated salt
+                }
+
+                try {
+                    // Encode Plain Text and Salt
+                    const encoder = new TextEncoder();
+                    const plaintextBytes = encoder.encode(plaintext);
+                    const saltBytes = encoder.encode(salt);
+
+                    // Import Plain Text as Key
+                    const key = await window.crypto.subtle.importKey(
+                        'raw',
+                        plaintextBytes,
+                        { name: 'PBKDF2' },
+                        false,
+                        ['deriveBits']
+                    );
+
+                    // Derive Bits
+                    const derivedBits = await window.crypto.subtle.deriveBits(
+                        {
+                            name: 'PBKDF2',
+                            salt: saltBytes,
+                            iterations: iterations,
+                            hash: hash
+                        },
+                        key,
+                        keyLengthBytes * 8 // Convert bytes to bits
+                    );
+
+                    // Convert Derived Bits to Hex
+                    const derivedBytes = new Uint8Array(derivedBits);
+                    const hex = Array.from(derivedBytes)
+                        .map(b => b.toString(16).padStart(2, '0'))
+                        .join('');
+
+                    // Display Derived Key
+                    keyOutput.value = hex;
+                    derivedKeyDiv.style.display = 'block';
+                } catch (error) {
+                    console.error(error);
+                    displayError('An error occurred during key derivation.');
+                }
+            });
+
+            // Copy to Clipboard Functionality
+            copyButton.addEventListener('click', function() {
+                keyOutput.select();
+                keyOutput.setSelectionRange(0, 99999); // For mobile devices
+
+                navigator.clipboard.writeText(keyOutput.value).then(() => {
+                    showTemporaryMessage('Copied!', copyButton);
+                }).catch(() => {
+                    alert('Failed to copy the derived key.');
+                });
+            });
+
+            // Function to Display Error Messages
+            function displayError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            // Function to Show Temporary Messages
+            function showTemporaryMessage(message, element) {
+                const originalText = element.textContent;
+                element.textContent = message;
+                element.disabled = true;
+                setTimeout(() => {
+                    element.textContent = 'Copy';
+                    element.disabled = false;
+                }, 1500);
+            }
+        })();
+    </script>
+</div>
